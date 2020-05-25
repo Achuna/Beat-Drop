@@ -1,46 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/light_back"
-    tools:context=".MainActivity">
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/simple_light_back">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".MainActivity">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="Beat Drop"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="314dp"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-54dp"
+            android:text="Your Personalized Daily Music"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/addMusic"
+            android:layout_width="138dp"
+            android:layout_height="34dp"
+            android:layout_alignBottom="@+id/description"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-77dp"
+            android:background="@drawable/btn_rounded"
+            android:text="ADD MUSIC"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/addMusic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-246dp"
+            android:background="@color/transparent"
+            app:srcCompat="@drawable/beat_drop" />
+
+        <TextView
+            android:id="@+id/actionDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/playButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="-45dp"
+            android:fontFamily="casual"
+            android:text="Tap to Drop"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/actionDescription"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="-100dp" />
+
+
+
+    </RelativeLayout>
+
+    <GridLayout
+        android:id="@+id/mainGrid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:columnOrderPreserved="false"
+        android:padding="8dp"
+        android:rowCount="1">
+
+        <!-- Column 1 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/songs_icon" />
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Column 2 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/happy" />
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Column 3 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="2dp"
+            android:layout_height="84dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/settings" />
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </GridLayout>
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
 
     <TextView
-        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Beat Drop"
+        android:textAlignment="center"
+        android:textSize="18sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#FFFFFF" />
+        android:text="Developer: Achuna Ofonedu"
+        />
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="314dp"
-        android:layout_height="36dp"
-        android:layout_alignBottom="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-54dp"
-        android:text="Your Personalized Daily Music"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/songs_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="casual"
+            android:text="Songs"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="50dp"
+            android:textColor="#000000" />
 
-    <Button
-        android:id="@+id/addMusic"
-        android:layout_width="138dp"
-        android:layout_height="34dp"
-        android:layout_alignBottom="@+id/description"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="-77dp"
-        android:background="@drawable/btn_rounded"
-        android:text="ADD MUSIC"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/mood_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/songs_label"
+            android:layout_marginStart="125dp"
+            android:fontFamily="casual"
+            android:text="Mood"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/settings_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/mood_label"
+            android:layout_marginStart="113dp"
+            android:fontFamily="casual"
+            android:text="Settings"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>
+
