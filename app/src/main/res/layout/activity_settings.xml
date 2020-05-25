@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/simple_light_back"
+    tools:context=".settings">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="249dp">
+
+
+        <TextView
+            android:id="@+id/settings_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="Settings"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/settings_description"
+            android:layout_width="314dp"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/settings_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-54dp"
+            android:text="Change Your Preferences"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/settings_icon"
+            android:layout_width="89dp"
+            android:layout_height="77dp"
+            android:layout_alignBottom="@+id/settings_description"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-98dp"
+            app:srcCompat="@drawable/settings" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- First settings -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/darkThemeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Theme"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/darkThemeDes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/darkThemeLabel"
+                android:layout_marginBottom="-25dp"
+                android:text="Enable dark theme in app"
+                android:textColor="@color/gray"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/dark_theme_switch"
+                android:layout_width="53dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="280dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="-212dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignBottom="@+id/darkThemeDes"
+                android:layout_marginBottom="-20dp"
+                android:background="@android:color/darker_gray" />
+
+        </RelativeLayout>
+
+        <!-- Second settings -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/notificationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/notificationDes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/notificationLabel"
+                android:layout_marginBottom="-25dp"
+                android:text="Get daily notifications"
+                android:textColor="@color/gray"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/notificationSwitch"
+                android:layout_width="53dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="280dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="-212dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignBottom="@+id/notificationDes"
+                android:layout_marginBottom="-20dp"
+                android:background="@android:color/darker_gray" />
+
+        </RelativeLayout>
+
+        <!-- Third setting -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/OfflineMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offline Music"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/offlineDes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/OfflineMusic"
+                android:layout_marginBottom="-25dp"
+                android:text="Shuffle through music on device"
+                android:textColor="@color/gray"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/offlineSwitch"
+                android:layout_width="53dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="280dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="-212dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignBottom="@+id/offlineDes"
+                android:layout_marginBottom="-20dp"
+                android:background="@android:color/darker_gray" />
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/save_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@color/transparent"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/save" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
