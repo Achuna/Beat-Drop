@@ -1,9 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/songsActivityLayout"
+    android:background="@drawable/simple_light_back"
     tools:context=".songs">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="249dp">
+
+
+        <TextView
+            android:id="@+id/songs_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="Your Songs"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/songs_description"
+            android:layout_width="314dp"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/songs_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-54dp"
+            android:text="Links to All Uploaded Music"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/addMusciImage"
+            android:layout_width="89dp"
+            android:layout_height="77dp"
+            android:layout_alignBottom="@+id/songs_description"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="-98dp"
+            android:clickable="true"
+            app:srcCompat="@drawable/songs_icon" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <ListView
+            android:id="@+id/songs_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
