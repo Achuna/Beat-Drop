@@ -63,7 +63,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="26dp"
                     android:background="@drawable/custom_text_area"
-                    android:hint="Song link..."
+                    android:hint="Song Link..."
                     android:maxLines="1"
                     android:textColor="@color/colorPrimaryDark" />
 

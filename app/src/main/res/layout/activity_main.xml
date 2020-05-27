@@ -85,7 +85,6 @@
             android:layout_marginBottom="-100dp" />
 
 
-
     </RelativeLayout>
 
     <GridLayout
@@ -119,6 +118,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/main_songs_icon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
@@ -196,15 +196,15 @@
     android:layout_width="match_parent"
     android:layout_height="90dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="Developer: Achuna Ofonedu"
-        />
+        <TextView
+            android:id="@+id/dev_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="Developer: Achuna Ofonedu"
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/songs_label"

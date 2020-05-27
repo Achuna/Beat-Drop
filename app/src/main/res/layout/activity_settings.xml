@@ -62,7 +62,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:layout_marginTop="20dp">
 
             <TextView
@@ -91,6 +91,7 @@
                 android:layout_marginStart="280dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="-212dp"
+                android:checked="false"
                 android:scaleX="2"
                 android:scaleY="2" />
 
@@ -98,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignBottom="@+id/darkThemeDes"
-                android:layout_marginBottom="-20dp"
+                android:layout_marginBottom="-40dp"
                 android:background="@android:color/darker_gray" />
 
         </RelativeLayout>
@@ -107,8 +108,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="20dp">
+            android:layout_height="100dp"
+            android:layout_marginTop="40dp">
 
             <TextView
                 android:id="@+id/notificationLabel"
@@ -143,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignBottom="@+id/notificationDes"
-                android:layout_marginBottom="-20dp"
+                android:layout_marginBottom="-40dp"
                 android:background="@android:color/darker_gray" />
 
         </RelativeLayout>
@@ -152,7 +153,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="40dp">
 
             <TextView
                 android:id="@+id/OfflineMusic"
@@ -183,23 +184,19 @@
                 android:scaleX="2"
                 android:scaleY="2" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignBottom="@+id/offlineDes"
-                android:layout_marginBottom="-20dp"
-                android:background="@android:color/darker_gray" />
 
         </RelativeLayout>
 
-        <ImageButton
+        <Button
             android:id="@+id/save_settings"
-            android:layout_width="wrap_content"
+            android:layout_width="142dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:background="@color/transparent"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/save" />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_rounded"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
 
     </LinearLayout>

@@ -40,7 +40,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/addMusciImage"
+            android:id="@+id/cloudMusciImage"
             android:layout_width="89dp"
             android:layout_height="77dp"
             android:layout_alignBottom="@+id/songs_description"
