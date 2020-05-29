@@ -5,18 +5,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class songs extends AppCompatActivity {
 
@@ -28,6 +34,16 @@ public class songs extends AppCompatActivity {
     Dialog cloudDialog;
     TextView backupText;
     Button restoreBtn, backupBtn;
+    //Update Dialog box
+    Dialog updateDialog;
+    TextView textField;
+    ImageView playSong, updateCancel;
+    Button shareSong, deleteSongBtn;
+    //Prepare database
+    SongDbHelper database;
+    boolean isDark;
+    ArrayList<Song> songs;
+    String mood;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -41,8 +57,70 @@ public class songs extends AppCompatActivity {
         songList = findViewById(R.id.songs_list);
 
         cloudDialog = new Dialog(this);
+        updateDialog = new Dialog(this);
+        database = new SongDbHelper(this);
 
         applyTheme();
+
+        songs = loadLocalSongData();
+
+        final SongListAdapter adapter = new SongListAdapter(getApplicationContext(), songs, isDark);
+        songList.setAdapter(adapter);
+
+        songList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                mood = songs.get(position).getMood();
+                //Update Song Dialog
+                updateDialog.setContentView(R.layout.update_item);
+                textField = updateDialog.findViewById(R.id.updatesongTextField);
+                updateCancel = updateDialog.findViewById(R.id.updateCancel);
+
+                deleteSongBtn = updateDialog.findViewById(R.id.deleteMusicBtn);
+                playSong = updateDialog.findViewById(R.id.playSelectedSong);
+                shareSong = updateDialog.findViewById(R.id.shareMusic);
+
+                textField.setText(songs.get(position).getLink());
+
+                deleteSongBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String link = textField.getText().toString();
+                        database.deleteMusic(link);
+                        songs.remove(position); //temp arraylist updater when listview refreshes
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(getApplicationContext(), "Song Deleted", Toast.LENGTH_SHORT).show();
+                        updateDialog.dismiss();
+                    }
+                });
+
+                shareSong.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //This will allow the user to select options to share their music url
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, textField.getText().toString());
+                        sendIntent.setType("text/plain");
+                        startActivity(Intent.createChooser(sendIntent, "Share"));
+                    }
+                });
+
+
+                updateCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        updateDialog.dismiss();
+                    }
+                });
+
+                updateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                updateDialog.show();
+            }
+
+
+        });
+
 
         //Cloud Storage Menu
         cloudBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,13 +154,29 @@ public class songs extends AppCompatActivity {
 
     public void applyTheme() {
         preferences = getSharedPreferences("MySettings", Context.MODE_PRIVATE);
-        boolean isDark = preferences.getBoolean("darkEnabled", false);
+        isDark = preferences.getBoolean("darkEnabled", false);
         //Add theme to UI elements
         if(isDark) {
             layout.setBackground(getApplicationContext().getDrawable(R.drawable.simple_dark_back));
         } else {
             layout.setBackground(getApplicationContext().getDrawable(R.drawable.simple_light_back));
         }
+    }
+
+    ////////////////////DATA METHODS//////////////////////
+
+
+    //Load songs from local SQLite database on device
+    public ArrayList<Song> loadLocalSongData() {
+        ArrayList<Song> localSongs = new ArrayList<>();
+        Cursor data = database.getData();
+        while (data.moveToNext()) {
+            String link = data.getString(1); //get link
+            String mood = data.getString(2); //get mood
+            Song songItem = new Song(link, mood);
+            localSongs.add(songItem);
+        }
+        return localSongs;
     }
 
     @Override

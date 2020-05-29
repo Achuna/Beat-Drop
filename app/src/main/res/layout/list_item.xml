@@ -23,15 +23,16 @@
             android:src="@drawable/happy" />
 
         <TextView
-            android:layout_width="264dp"
+            android:id="@+id/listItemText"
+            android:layout_width="244dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginStart="22dp"
             android:layout_marginTop="17dp"
             android:layout_toEndOf="@+id/moodImage"
-            android:text="This is a place holder"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="This is a place holder"
             android:textColor="@color/black"
             android:textSize="20sp" />
 

@@ -10,7 +10,7 @@
 
 
     <ImageView
-        android:id="@+id/updateCancel"
+        android:id="@+id/localCancel"
         android:layout_width="38dp"
         android:layout_height="29dp"
         android:layout_alignParentRight="true"
@@ -44,69 +44,50 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/updatepopupTitle"
+                    android:id="@+id/localpopupTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:text="Song Actions"
+                    android:text="Remote Storage"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/updatesongTextField"
+                    android:id="@+id/remoteDes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:text="Back up data to remote location"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/ipTextField"
                     android:layout_width="280dp"
                     android:layout_height="59dp"
+                    android:inputType="text"
                     android:layout_gravity="center"
                     android:layout_marginTop="26dp"
-                    android:textIsSelectable="true"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
                     android:background="@drawable/custom_text_area"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:gravity="center_vertical"
-                    android:text="dfsfds"
+                    android:hint="IP Address..."
+                    android:maxLines="1"
                     android:textColor="@color/colorPrimaryDark" />
 
-                <ImageView
-                    android:id="@+id/playSelectedSong"
-                    android:layout_width="165dp"
-                    android:layout_height="129dp"
-                    android:layout_marginStart="80dp"
-                    android:src="@drawable/play" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/remoteBackupDtn"
+                    android:layout_width="142dp"
+                    android:layout_marginTop="16dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/deleteMusicBtn"
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="20dp"
-                        android:background="@drawable/delete_button"
-                        android:text="Delete Song"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                    <Button
-                        android:id="@+id/shareMusic"
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="25dp"
-                        android:background="@drawable/btn_rounded"
-                        android:text="Share Song"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_rounded"
+                    android:text="Backup"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

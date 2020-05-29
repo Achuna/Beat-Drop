@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,11 +42,14 @@ public class MainActivity extends AppCompatActivity {
     //Dialog Items
     Dialog musicDialog;
     EditText songInput;
-    ImageView happyChoice, chillChoice, sadChoice, angryChoice, romanticChoice, funnyChoice, addCancel;
+    ImageView currentMood, happyChoice, chillChoice, sadChoice, angryChoice, romanticChoice, funnyChoice, addCancel;
     Button musicSave;
     //Prepare Preferences
     SharedPreferences preferences;
     SharedPreferences moodPreferences;
+    String moodChoice = "happy";
+    //Database Handler
+    SongDbHelper database;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         applyTheme();
 
+        database = new SongDbHelper(this);
         musicDialog = new Dialog(this);
 
         //Pop up dialog box to add songs
@@ -145,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
         ///////////////End of Main Activity Navigation Cards////////////////
 
 
+        ////////SWIPE GESTURES//////
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+
     }
 
     @Override
@@ -218,13 +235,23 @@ public class MainActivity extends AppCompatActivity {
         return isConnected;
     }
 
+    public boolean songExists(String link) {
+        ArrayList<Song> tempSongs = loadLocalSongData();
+        for (int i = 0; i < tempSongs.size(); i++) {
+            if(tempSongs.get(i).getLink().equals(link)) return true;
+        }
+        return false;
+    }
+
 
     //Displays music dialog
     public void showMusicDialog() {
         //Connect elements
+        moodChoice = "happy";
         musicDialog.setContentView(R.layout.add_item);
         songInput = musicDialog.findViewById(R.id.songTextField);
         addCancel = musicDialog.findViewById(R.id.addCancel);
+        currentMood = musicDialog.findViewById(R.id.currentMood);
         happyChoice = musicDialog.findViewById(R.id.happyChoice);
         chillChoice = musicDialog.findViewById(R.id.chillChoice);
         sadChoice = musicDialog.findViewById(R.id.sadChoice);
@@ -233,6 +260,51 @@ public class MainActivity extends AppCompatActivity {
         funnyChoice = musicDialog.findViewById(R.id.funnyChoice);
         musicSave = musicDialog.findViewById(R.id.addMusicBtn);
 
+        /////////MOOD CHOICE LISTENERS//////////
+
+        happyChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.happy);
+                moodChoice = "happy";
+            }
+        });
+        chillChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.chill);
+                moodChoice = "chill";
+            }
+        });
+        sadChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.sad);
+                moodChoice = "sad";
+            }
+        });
+        angryChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.angry);
+                moodChoice = "angry";
+            }
+        });
+        romanticChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.romantic);
+                moodChoice = "romantic";
+            }
+        });
+        funnyChoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentMood.setImageResource(R.drawable.funny);
+                moodChoice = "funny";
+            }
+        });
+
         addCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,8 +312,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        musicSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Store on cloud first then local
+                String link = songInput.getText().toString();
+                if (link.length() != 0) {
+                    if(songExists(link)) {
+                        Toast.makeText(getApplicationContext(), "Song Already Exists", Toast.LENGTH_SHORT).show();
+                        songInput.setText("");
+                    } else {
+                        Song newSong = new Song(link, moodChoice);
+                        database.addMusic(newSong); //Add music to internal database
+                        Toast.makeText(getApplicationContext(), "Song Added", Toast.LENGTH_SHORT).show();
+                        songInput.setText("");
+                    }
+                }
+            }
+        });
+
         musicDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         musicDialog.show();
+    }
+
+    //Load songs from local SQLite database on device
+    public ArrayList<Song> loadLocalSongData() {
+        ArrayList<Song> localSongs = new ArrayList<>();
+        Cursor data = database.getData();
+        while (data.moveToNext()) {
+            String link = data.getString(1); //get link
+            String mood = data.getString(2); //get mood
+            Song songItem = new Song(link, mood);
+            localSongs.add(songItem);
+        }
+        return localSongs;
     }
 }
 
