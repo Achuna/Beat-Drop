@@ -63,7 +63,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Back up data to remote location"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/ipTextField"

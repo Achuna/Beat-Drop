@@ -12,11 +12,10 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.util.Calendar;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,9 +48,12 @@ public class MainActivity extends AppCompatActivity {
     //Prepare Preferences
     SharedPreferences preferences;
     SharedPreferences moodPreferences;
+    SharedPreferences backupPreference;
     String moodChoice = "happy";
     //Database Handler
     SongDbHelper database;
+    Backup backup;
+    String[] exists;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -153,15 +157,6 @@ public class MainActivity extends AppCompatActivity {
         ///////////////End of Main Activity Navigation Cards////////////////
 
 
-        ////////SWIPE GESTURES//////
-        layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-
-
     }
 
     @Override
@@ -235,12 +230,23 @@ public class MainActivity extends AppCompatActivity {
         return isConnected;
     }
 
-    public boolean songExists(String link) {
-        ArrayList<Song> tempSongs = loadLocalSongData();
-        for (int i = 0; i < tempSongs.size(); i++) {
-            if(tempSongs.get(i).getLink().equals(link)) return true;
+    public String[] songExists(final String link, ArrayList<Song> songs) {
+
+        exists = new String[] {"false", "false", "happy"}; //exists locally, exists in cloud
+
+        for (int i = 0; i < songs.size(); i++) {
+            if (songs.get(i).getLink().equals(link)) {
+                exists[1] = "true";
+                exists[2] = songs.get(i).getMood();
+                break;
+            }
+
+            ArrayList<Song> tempSongs = loadLocalSongData();
+            for (int j = 0; j < tempSongs.size(); j++) {
+                if (tempSongs.get(j).getLink().equals(link)) exists[0] = "true";
+            }
         }
-        return false;
+        return exists;
     }
 
 
@@ -316,17 +322,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Store on cloud first then local
-                String link = songInput.getText().toString();
+                final String link = songInput.getText().toString();
                 if (link.length() != 0) {
-                    if(songExists(link)) {
+                    ArrayList<Song> tempSongs = loadLocalSongData();
+                    boolean existsLocally = false;
+                    for (int j = 0; j < tempSongs.size(); j++) {
+                        if (tempSongs.get(j).getLink().equals(link)) existsLocally = true;
+                    }
+                    if (existsLocally) { //song exists locally (therefore on cloud already)
                         Toast.makeText(getApplicationContext(), "Song Already Exists", Toast.LENGTH_SHORT).show();
                         songInput.setText("");
                     } else {
-                        Song newSong = new Song(link, moodChoice);
-                        database.addMusic(newSong); //Add music to internal database
-                        Toast.makeText(getApplicationContext(), "Song Added", Toast.LENGTH_SHORT).show();
-                        songInput.setText("");
-                    }
+                    Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
+                    new Restore(getApplicationContext(), "", 1, new Restore.AsyncResponse() {
+                        @Override
+                        public void processFinished(ArrayList<Song> cloudSongs) {
+                            exists = songExists(link, cloudSongs);
+                            if (exists[0].equals("false") && exists[1].equals("false")) {
+                                ArrayList<Song> songs = new ArrayList<>(); //expected only one value
+                                final Song newSong = new Song(link, moodChoice);
+                                songs.add(newSong);
+                                //Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_SHORT).show();
+                                new Backup(getApplicationContext(), "", 1, 1, new Backup.AsyncResponse() {
+                                    @Override
+                                    public void processFinished(boolean result) {
+                                        if (result) {
+                                            database.addMusic(newSong); //Add music to internal database
+                                            Toast.makeText(getApplicationContext(), "Song Uploaded", Toast.LENGTH_SHORT).show();
+                                            songInput.setText("");
+                                            setBackupTime();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "COULD NOT SAVE SONG", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }).execute(songs);
+                            } else {
+                                database.addMusic(new Song(link, exists[2]));
+                                Toast.makeText(getApplicationContext(), "Song Already in Cloud", Toast.LENGTH_SHORT).show();
+                                songInput.setText("");
+                            }
+                        }
+                    }).execute();
+                }
                 }
             }
         });
@@ -347,5 +384,27 @@ public class MainActivity extends AppCompatActivity {
         }
         return localSongs;
     }
+
+    /**
+     * Sets the data and time that the most recent backup was made only if the
+     * backup was successful
+     */
+    public void setBackupTime() {
+        SharedPreferences backup = getSharedPreferences("backup", MODE_PRIVATE);
+        SharedPreferences.Editor editor = backup.edit();
+
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+        String time = simpleDateFormat.format(calendar.getTime());
+
+        String date = currentDate + " at " + time;
+
+        editor.putString("backupTime", date);
+        editor.commit();
+    }
+
+
 }
 

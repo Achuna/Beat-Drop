@@ -69,7 +69,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="4dp"
                     android:text="Last Backup:"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:maxLines="1"
                     android:textAlignment="center"
                     android:textColor="@color/white" />

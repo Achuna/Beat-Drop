@@ -47,7 +47,6 @@ public class SongDbHelper extends SQLiteOpenHelper {
     //////////DATABASE METHODS//////////////
 
     public void addMusic(Song song) {
-
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -60,11 +59,18 @@ public class SongDbHelper extends SQLiteOpenHelper {
     }
 
     public void deleteMusic(String link) {
-        int deleteVal = 0;
         SQLiteDatabase db = getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_LINK + "='" + link + "';";
         db.execSQL(query);
         Log.e("Achuna", "Song deleted");
+    }
+
+    //Only used on restore
+    public void clearMusic() {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME;
+        db.execSQL(query);
+        Log.e("Achuna", "Songs cleared");
     }
 
 

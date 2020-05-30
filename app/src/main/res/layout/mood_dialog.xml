@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <ImageView
+        android:id="@+id/moodCancel"
+        android:layout_width="38dp"
+        android:layout_height="29dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="4dp"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:elevation="5dp"
+        android:src="@drawable/x_icon" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="26dp"
+        app:cardBackgroundColor="#006DDA"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/moodpopupTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="How are you feeling?"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/notemoodLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="120dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Mood:"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/notecurrentMood"
+                        android:layout_width="47dp"
+                        android:layout_height="28dp"
+                        android:paddingRight="15dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="88dp"
+                        app:srcCompat="@drawable/happy" />
+
+
+                </LinearLayout>
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="151dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="8"
+                    android:columnCount="3"
+                    android:columnOrderPreserved="false"
+                    android:padding="16dp"
+                    android:rowCount="2">
+
+                    <ImageView
+                        android:id="@+id/happyChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/happy" />
+
+                    <ImageView
+                        android:id="@+id/chillChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/chill" />
+
+                    <ImageView
+                        android:id="@+id/sadChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/sad" />
+
+                    <ImageView
+                        android:id="@+id/angryChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/angry" />
+
+                    <ImageView
+                        android:id="@+id/romanticChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/romantic" />
+
+                    <ImageView
+                        android:id="@+id/funnyChoice"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/funny" />
+
+                </GridLayout>
+
+                <Button
+                    android:id="@+id/moodUpdateBtn"
+                    android:layout_width="142dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_rounded"
+                    android:text="Submit"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
