@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +19,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +34,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     SongDbHelper database;
     Backup backup;
     String[] exists;
+    private static final int MY_PERMISSION_REQUEST = 1;
+    ArrayList<String> deviceSongs;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -83,6 +92,127 @@ public class MainActivity extends AppCompatActivity {
 
         database = new SongDbHelper(this);
         musicDialog = new Dialog(this);
+
+
+//Create notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //main channel
+            CharSequence name = "Beat Drop Reminder";
+            String description = "Channel for Beat Drop";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("Beat Drop Reminder", name, importance);
+
+            //Mood channel
+            CharSequence moodname = "Beat Drop Mood";
+            String mooddescription = "Channel for Beat Drop Mood";
+            int moodimportance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel mchannel = new NotificationChannel("Beat Drop Mood", moodname, moodimportance);
+
+            channel.setDescription(description);
+            mchannel.setDescription(mooddescription);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+            notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(mchannel);
+        }
+
+        //Set Alarm for Notification
+
+        Calendar now = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent alarmIntent = new Intent(MainActivity.this, MoodReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
+
+        long dailyInterval = 1000 * 60 * 60 * 24;
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dailyInterval, pendingIntent);
+
+
+        Calendar mainnow = Calendar.getInstance();
+        Calendar maincalendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent mainalarmIntent = new Intent(MainActivity.this, NotificationReceiver.class);
+        PendingIntent mainpendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
+
+        AlarmManager mainalarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        mainalarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dailyInterval, mainpendingIntent);
+
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isConnected()) {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    globalMood.setImageResource(R.drawable.offline);
+                    songsIcon.setImageResource(R.drawable.offline);
+                    //Launch default music player
+                    Intent intent = new Intent("android.intent.action.MUSIC_PLAYER");
+                    startActivity(intent);
+                } else if(preferences.getBoolean("offlineEnabled", false)) {
+                    Toast.makeText(getApplicationContext(), "Offline Music Enabled", Toast.LENGTH_SHORT).show();
+                    //Launch default music player
+                    Intent intent = new Intent("android.intent.action.MUSIC_PLAYER");
+                    startActivity(intent);
+                } else {
+                    songsIcon.setImageResource(R.drawable.songs_icon);
+                    moodPreferences = getSharedPreferences("MyMood", Context.MODE_PRIVATE);
+                    final String mood = moodPreferences.getString("mood", "happy");
+                    if(mood.equals("happy")) {
+                        globalMood.setImageResource(R.drawable.happy);
+                    } else if(mood.equals("chill")) {
+                        globalMood.setImageResource(R.drawable.chill);
+                    } else if(mood.equals("sad")) {
+                        globalMood.setImageResource(R.drawable.sad);
+                    } else if(mood.equals("angry")) {
+                        globalMood.setImageResource(R.drawable.angry);
+                    } else if(mood.equals("romantic")) {
+                        globalMood.setImageResource(R.drawable.romantic);
+                    } else if(mood.equals("funny")) {
+                        globalMood.setImageResource(R.drawable.funny);
+                    }
+                    Toast.makeText(getApplicationContext(), "Dropping Song...", Toast.LENGTH_SHORT).show();
+                    new Restore(getApplicationContext(), "", 1, new Restore.AsyncResponse() {
+                        @Override
+                        public void processFinished(ArrayList<Song> cloudSongs) {
+                            if(cloudSongs.size() > 0) {
+                                ArrayList<String> personalizedSongs = new ArrayList<>();
+                                for (int i = 0; i < cloudSongs.size(); i++) {
+                                    if(cloudSongs.get(i).getMood().equals(mood)) //Add song if it matches the mood
+                                        personalizedSongs.add(cloudSongs.get(i).getLink());
+                                }
+                                if(personalizedSongs.size() == 0) {
+                                    Toast.makeText(getApplicationContext(), "No songs found for selected mood", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Pick random song from personalized array
+                                    Random rand = new Random();
+                                    String selectedSongLink = personalizedSongs.get(rand.nextInt(personalizedSongs.size()));
+                                    try {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedSongLink));
+                                        startActivity(browserIntent);
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Error Playing Song", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error Occurred (check connection)", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).execute();
+                }
+
+            }
+        });
+
 
         //Pop up dialog box to add songs
         addMusic.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +291,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
+        moodPreferences = getSharedPreferences("MyMood", Context.MODE_PRIVATE);
+
+        if(moodPreferences.getBoolean("justUpdate", false)) {
+            SharedPreferences.Editor editor = moodPreferences.edit();
+            editor.putBoolean("justUpdate", false);
+            editor.commit();
+            finish();
+        }
+
         applyTheme();
         super.onRestart();
     }
@@ -172,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isOffline = preferences.getBoolean("offlineEnabled", false);
 
         moodPreferences = getSharedPreferences("MyMood", Context.MODE_PRIVATE);
+
         String mood = moodPreferences.getString("mood", "happy");
         if(mood.equals("happy")) {
             globalMood.setImageResource(R.drawable.happy);

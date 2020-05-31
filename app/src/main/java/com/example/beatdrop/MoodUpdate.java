@@ -17,8 +17,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class mood extends AppCompatActivity {
+public class MoodUpdate extends AppCompatActivity {
 
     ImageView feelingChoice;
     CardView happyCard, chillCard, sadCard, angryCard, romanticCard, funnyCard;
@@ -30,39 +31,33 @@ public class mood extends AppCompatActivity {
     SharedPreferences settingsPreferences;
     String mood;
     String savedMood;
-    //Dialog variables
-    Dialog confirmationDialog;
-    TextView title, description;
-    Button decline, accept;
-    ImageView exit;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mood);
+        setContentView(R.layout.activity_mood_update);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        layout = findViewById(R.id.moodActivityLayout);
+        layout = findViewById(R.id.updatemoodActivityLayout);
         //Card views
-        feelingChoice = findViewById(R.id.feeling_choice);
-        happyCard = findViewById(R.id.happyCard);
-        chillCard = findViewById(R.id.chillCard);
-        sadCard = findViewById(R.id.sadCard);
-        angryCard = findViewById(R.id.angryCard);
-        romanticCard = findViewById(R.id.romanticCard);
-        funnyCard = findViewById(R.id.funnyCard);
-        moodSave = findViewById(R.id.mood_save_btn);
+        feelingChoice = findViewById(R.id.updatefeeling_choice);
+        happyCard = findViewById(R.id.updatehappyCard);
+        chillCard = findViewById(R.id.updatechillCard);
+        sadCard = findViewById(R.id.updatesadCard);
+        angryCard = findViewById(R.id.updateangryCard);
+        romanticCard = findViewById(R.id.updateromanticCard);
+        funnyCard = findViewById(R.id.updatefunnyCard);
+        moodSave = findViewById(R.id.updatemood_save_btn);
 
         //Texts
-        happyText = findViewById(R.id.happyText);
-        chillText = findViewById(R.id.chillText);
-        sadText = findViewById(R.id.sadText);
-        angryText= findViewById(R.id.angryText);
-        romanticText= findViewById(R.id.romanticText);
-        funnyText = findViewById(R.id.funnyText);
+        happyText = findViewById(R.id.updatehappyText);
+        chillText = findViewById(R.id.updatechillText);
+        sadText = findViewById(R.id.updatesadText);
+        angryText= findViewById(R.id.updateangryText);
+        romanticText= findViewById(R.id.updateromanticText);
+        funnyText = findViewById(R.id.updatefunnyText);
 
-        confirmationDialog = new Dialog(this);
 
         //Apply theme and mood
         applyTheme();
@@ -114,10 +109,6 @@ public class mood extends AppCompatActivity {
         moodSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                savedMood = mood;
-                SharedPreferences.Editor editor = moodPreferences.edit();
-                editor.putString("mood", mood);
-                editor.commit();
                 finish();
             }
         });
@@ -126,69 +117,41 @@ public class mood extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        applyTheme();
+        SharedPreferences.Editor editor = moodPreferences.edit();
+        editor.putString("mood", mood);
+        editor.putBoolean("justUpdate", true);
+        editor.commit();
+        finish();
         super.onRestart();
     }
 
+    @Override
+    protected void onPause() {
+        finish();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        finish();
+        super.onStop();
+    }
 
     @Override
     public void finish() {
-        //If changes are found, show dialog
-        boolean changesFound = (!savedMood.equals(mood));
-        if(changesFound && confirmationChoice == 0) {
-
-            //Connect elements
-            confirmationDialog.setContentView(R.layout.confirmation_dialog);
-            title = confirmationDialog.findViewById(R.id.confirmationTitle);
-            description = confirmationDialog.findViewById(R.id.confirmationDes);
-            accept = confirmationDialog.findViewById(R.id.accept);
-            decline = confirmationDialog.findViewById(R.id.decline);
-            exit = confirmationDialog.findViewById(R.id.confirmExit);
-
-            title.setText("Changes Found");
-            description.setText("Exit without saving?");
-
-            exit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    confirmationDialog.dismiss();
-                    confirmationChoice = 2;
-                    finish();
-                }
-            });
-            accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    confirmationChoice = 1;
-                    confirmationDialog.dismiss();
-                    finish();
-                }
-            });
-
-            decline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    confirmationChoice = 2;
-                    confirmationDialog.dismiss();
-                    finish();
-                }
-            });
-
-            confirmationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            confirmationDialog.show();
-
-            //No Changes in mood
-        } else if(confirmationChoice == 1) {
+        //Save preference
+        savedMood = mood;
+        if(moodPreferences.getBoolean("justUpdate", false)) {
             super.finish();
-        } else if(confirmationChoice == 2){
-            confirmationChoice = 0;
-        }
-        else {
+        } else {
             SharedPreferences.Editor editor = moodPreferences.edit();
-            editor.putBoolean("justUpdate", false);
+            editor.putString("mood", mood);
+            editor.putBoolean("justUpdate", true);
             editor.commit();
+            Toast.makeText(getApplicationContext(), "Mood Saved", Toast.LENGTH_SHORT/2).show();
             super.finish();
         }
+
     }
 
     public void applyTheme() {
@@ -199,19 +162,19 @@ public class mood extends AppCompatActivity {
         boolean isDark = settingsPreferences.getBoolean("darkEnabled", false);
 
 
-            if(savedMood.equals("happy")) {
-                feelingChoice.setImageResource(R.drawable.happy);
-            } else if(savedMood.equals("chill")) {
-                feelingChoice.setImageResource(R.drawable.chill);
-            } else if(savedMood.equals("sad")) {
-                feelingChoice.setImageResource(R.drawable.sad);
-            } else if(savedMood.equals("angry")) {
-                feelingChoice.setImageResource(R.drawable.angry);
-            } else if(savedMood.equals("romantic")) {
-                feelingChoice.setImageResource(R.drawable.romantic);
-            } else if(savedMood.equals("funny")) {
-                feelingChoice.setImageResource(R.drawable.funny);
-            }
+        if(savedMood.equals("happy")) {
+            feelingChoice.setImageResource(R.drawable.happy);
+        } else if(savedMood.equals("chill")) {
+            feelingChoice.setImageResource(R.drawable.chill);
+        } else if(savedMood.equals("sad")) {
+            feelingChoice.setImageResource(R.drawable.sad);
+        } else if(savedMood.equals("angry")) {
+            feelingChoice.setImageResource(R.drawable.angry);
+        } else if(savedMood.equals("romantic")) {
+            feelingChoice.setImageResource(R.drawable.romantic);
+        } else if(savedMood.equals("funny")) {
+            feelingChoice.setImageResource(R.drawable.funny);
+        }
 
 
         //Add theme to UI elements
