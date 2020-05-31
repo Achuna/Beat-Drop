@@ -2,13 +2,21 @@ package com.example.beatdrop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -115,6 +123,33 @@ public class settings extends AppCompatActivity {
                 editor.putBoolean("notifyEnabled", notifications);
                 editor.putBoolean("offlineEnabled", offline);
                 editor.commit();
+
+                if (isNotify) {
+                    //Create notification channel
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        //main channel
+                        CharSequence name = "Beat Drop Reminder";
+                        String description = "Channel for Beat Drop";
+                        int importance = NotificationManager.IMPORTANCE_HIGH;
+                        NotificationChannel channel = new NotificationChannel("Beat Drop Reminder", name, importance);
+
+                        //Mood channel
+                        CharSequence moodname = "Beat Drop Mood";
+                        String mooddescription = "Channel for Beat Drop Mood";
+                        int moodimportance = NotificationManager.IMPORTANCE_DEFAULT;
+                        NotificationChannel mchannel = new NotificationChannel("Beat Drop Mood", moodname, moodimportance);
+
+                        channel.setDescription(description);
+                        mchannel.setDescription(mooddescription);
+                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                        notificationManager.createNotificationChannel(channel);
+                        notificationManager.createNotificationChannel(mchannel);
+                    }
+                    Intent start = new Intent(getApplicationContext(), AlarmService.class);
+                    getApplicationContext().startService(start);
+
+                }
+
                 finish();
             }
         });

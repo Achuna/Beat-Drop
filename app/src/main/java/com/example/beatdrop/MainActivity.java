@@ -94,59 +94,6 @@ public class MainActivity extends AppCompatActivity {
         musicDialog = new Dialog(this);
 
 
-//Create notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //main channel
-            CharSequence name = "Beat Drop Reminder";
-            String description = "Channel for Beat Drop";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("Beat Drop Reminder", name, importance);
-
-            //Mood channel
-            CharSequence moodname = "Beat Drop Mood";
-            String mooddescription = "Channel for Beat Drop Mood";
-            int moodimportance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel mchannel = new NotificationChannel("Beat Drop Mood", moodname, moodimportance);
-
-            channel.setDescription(description);
-            mchannel.setDescription(mooddescription);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-
-            notificationManager.createNotificationChannel(channel);
-            notificationManager.createNotificationChannel(mchannel);
-        }
-
-        //Set Alarm for Notification
-
-        Calendar now = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        Intent alarmIntent = new Intent(MainActivity.this, MoodReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
-
-        long dailyInterval = 1000 * 60 * 60 * 24;
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dailyInterval, pendingIntent);
-
-
-        Calendar mainnow = Calendar.getInstance();
-        Calendar maincalendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        Intent mainalarmIntent = new Intent(MainActivity.this, NotificationReceiver.class);
-        PendingIntent mainpendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
-
-        AlarmManager mainalarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        mainalarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dailyInterval, mainpendingIntent);
-
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
