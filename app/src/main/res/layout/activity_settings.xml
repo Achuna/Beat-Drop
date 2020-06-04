@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/notificationLabel"
                 android:layout_marginBottom="-25dp"
-                android:text="Get daily notifications"
+                android:text="Get periodic notifications"
                 android:textColor="@color/gray"
                 android:textSize="16sp" />
 

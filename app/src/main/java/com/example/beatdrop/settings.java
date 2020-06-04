@@ -107,8 +107,6 @@ public class settings extends AppCompatActivity {
         });
 
 
-
-
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,8 +143,9 @@ public class settings extends AppCompatActivity {
                         notificationManager.createNotificationChannel(channel);
                         notificationManager.createNotificationChannel(mchannel);
                     }
+
                     Intent start = new Intent(getApplicationContext(), AlarmService.class);
-                    getApplicationContext().startService(start);
+                    startService(start);
 
                 }
 

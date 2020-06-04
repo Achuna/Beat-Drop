@@ -21,6 +21,7 @@
         <activity android:name=".MoodUpdate"/>
 
         <service android:name=".AlarmService" android:enabled="true"/>
+
         <receiver android:name=".NotificationReceiver" />
         <receiver android:name=".MoodReceiver" />
 

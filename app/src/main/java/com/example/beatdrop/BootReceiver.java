@@ -53,26 +53,28 @@ public class BootReceiver extends BroadcastReceiver {
                     notificationManager.createNotificationChannel(channel);
                     notificationManager.createNotificationChannel(mchannel);
                 }
+                //hour and minute to receive consecutive notifications
+                int[] times = {9, 10, 0, 0};
 
                 Calendar now = Calendar.getInstance();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(System.currentTimeMillis());
 
-                calendar.set(Calendar.HOUR_OF_DAY, 9);
-                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, times[0]);
+                calendar.set(Calendar.MINUTE, times[2]);
                 calendar.set(Calendar.SECOND, 0);
 
                 Intent alarmIntent = new Intent(context, MoodReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 long diff = now.getTimeInMillis() - calendar.getTimeInMillis();
-                long dailyInterval = 1000 * 60 * 60 * 24;
+                long timeInterval = 1000 * 60 * 60 * 4;
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
                 if(diff > 0) {
-                    alarmManager.cancel(pendingIntent);
+                    //alarmManager.cancel(pendingIntent);
                 } else {
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), dailyInterval, pendingIntent);
+                    alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), timeInterval, pendingIntent);
                 }
 
 
@@ -81,8 +83,8 @@ public class BootReceiver extends BroadcastReceiver {
                 Calendar maincalendar = Calendar.getInstance();
                 maincalendar.setTimeInMillis(System.currentTimeMillis());
 
-                maincalendar.set(Calendar.HOUR_OF_DAY, 10);
-                maincalendar.set(Calendar.MINUTE, 0);
+                maincalendar.set(Calendar.HOUR_OF_DAY, times[1]);
+                maincalendar.set(Calendar.MINUTE, times[3]);
                 maincalendar.set(Calendar.SECOND, 0);
 
                 Intent mainalarmIntent = new Intent(context, NotificationReceiver.class);
@@ -92,16 +94,21 @@ public class BootReceiver extends BroadcastReceiver {
 
                 long mainDiff = mainnow.getTimeInMillis() - maincalendar.getTimeInMillis();
                 if(mainDiff > 0) {
-                    mainalarmManager.cancel(mainpendingIntent);
+                    //mainalarmManager.cancel(mainpendingIntent);
                 } else {
-                    mainalarmManager.setRepeating(AlarmManager.RTC_WAKEUP, maincalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, mainpendingIntent);
+                    mainalarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, maincalendar.getTimeInMillis(), timeInterval, mainpendingIntent);
                 }
 
-            }
-            Log.i("AService", "Started Alarm For BEAT DROP From Device Boot--------------------------------------------");
+                Log.i("AService", "Started Alarm For BEAT DROP From Device Boot--------------------------------------------");
 
-            Intent start = new Intent(context, AlarmService.class);
-            context.startForegroundService(start);
+                Intent serviceIntent = new Intent(context, AlarmService.class);
+                PendingIntent pendingService = PendingIntent.getService(context, 0, serviceIntent, 0);
+
+                AlarmManager serviceManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                serviceManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 60000*30, pendingService);
+
+            }
+
             Log.i("AService", "Started Alarm For BEAT DROP From Device Boot--------------------------------------------");
 
 
